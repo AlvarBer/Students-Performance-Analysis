@@ -1,0 +1,11 @@
+# Strut slideshow
+presentation/
+
+# Sublime Project files
+*.sublime-*
+
+# Vim backup files
+*.sw?
+
+# PDF files
+*.pdf
