@@ -17,14 +17,16 @@ source("machineLearning/svm.m");
 data = csvread('../data/student-mat-oct.csv');
 
 % Data feature pick
-X = data(:, 1:32);
+X = data(:, 1:30);
 y = data(:, 33);
 
 % Normalization
+%X(:, 31) = X(:, 31) / 20;
+%X(:, 32) = X(:, 32) / 20;
 y = y/20;
 
 % Options
-lCurves = false; % Set this to true to see learning curves
+lCurves = true; % Set this to true to see learning curves
 %ignore_function_time_stamp ('all'); % Black Magic Optimization tricks
 
 % Logistic Regression Analysis
@@ -34,4 +36,4 @@ theta = logReg(X, y, lCurves);
 %theta = neuralNetwork(X, y, lCurves);
 
 % Support Vector Machine Analysis
-% model = svm(X, y);
+%model = svm(X, y);

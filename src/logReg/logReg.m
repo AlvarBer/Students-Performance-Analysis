@@ -7,34 +7,45 @@ warning('off');
 
 % Main function of the logistic regression analysis
 function [theta] = logReg(X,Y,lCurves)
+
 	% PARAMETERS
-	lambda = 10;
-	percentage_training = 0.7; % Training examples / Total examples
+	normalize = false; % Normalize the data or not
+	lambda = 3; % Regularization term
+	percentage_training = 0.8; % Training examples / Total examples
+
+	% The learning frequency only applies to learning curves. Each learningFreq
+	% iterations, the error is recalculated. % The lower learningFreq is, the slower
+	% the calculation will be
+	learningFreq = fix(rows(X) * 0.1);
 
 	% Distribution of the examples (With normalization)
-	n_tra = percentage_training * rows(X); % Number of training examples
+	n_tra = fix(percentage_training * rows(X)); % Number of training examples
 	n_val = rows(X) - n_tra; % Number of validation examples
 
-	X_tra = featureNormalize (X(1:n_tra,:));
-	Y_tra = Y(1:n_tra,:);
+	if(normalize)
+		X_tra = featureNormalize (X(1:n_tra,:));
+		X_val = featureNormalize (X(n_tra+1:rows(X),:));
+	else
+		X_tra = X(1:n_tra,:);
+		X_val = X(n_tra+1:rows(X),:);
+	endif
 
-	X_val = featureNormalize (X(n_tra+1:rows(X),:));
+	Y_tra = Y(1:n_tra,:);
 	Y_val = Y(n_tra+1:rows(X),:);
 
 	% Learning Curves + training or just training
 
 	if (lCurves)
-		[errTraining, errValidation,theta] = lr_learningCurves (X_tra,Y_tra,
-			X_val,Y_val, lambda);
+		[errTraining, errValidation,theta] = lr_learningCurves (X_tra,Y_tra,X_val,Y_val,
+			lambda,learningFreq);
 
 		% Save/Load the result in disk (For debugging)
-		% save learningCurves.tmp errTraining errValidation theta;
+		save learningCurves.tmp errTraining errValidation theta;
 		% load learningCurves.tmp
 
 		% Show the graphics of the learning curves
-		G_lr_LearningCurves(X_tra,errTraining, errValidation);
-	else
-		% Only Training
+		G_lr_LearningCurves(X_tra,errTraining, errValidation,learningFreq);
+	else % Only Training
 		theta = lr_training(X_tra,Y_tra,lambda);
 	endif
 
@@ -66,9 +77,9 @@ function [theta] = logReg(X,Y,lCurves)
 
 endfunction
 
-% ==============================================================================
+% ===============================================================================
 
-% T raining function
+% Training function
 function [theta,cost] = lr_training(X,y,lambda)
 	m = length(y);
 	n = length(X(1,:));
@@ -80,21 +91,21 @@ function [theta,cost] = lr_training(X,y,lambda)
 	theta = initial_theta;
 
 	% Optimization
-	options = optimset('GradObj' , 'on', 'MaxIter', 1000);
-	[theta, cost] = fminunc(@(t)(lr_costFunction(t, X, y, lambda)),
-	 initial_theta, options);
+	options = optimset('GradObj','on','MaxIter',1000);
+	[theta,cost] = fminunc(@(t)(lr_costFunction(t,X,y,lambda)), initial_theta, options);
+
 endfunction
 
-% ==============================================================================
+%===============================================================================
 
-% Cost Function
-function [J,grad] = lr_costFunction (theta, X, y, lambda)
-	% Disable warnings
+%Cost Function
+function [J,grad] = lr_costFunction (theta,X,y,lambda)
+	%Disable warnings
 	warning ('off');
 
 	m = length(y);
-	n = length(X(1, :));
-	J = ((1 / m) * sum(-y .* log(lr_hFunction(X, theta)) - (1 - y) .*
+	n = length(X(1,:));
+	J = ((1 / m) * sum(-y .* log(lr_hFunction(X,theta)) - (1 - y) .*
  	log (1 - lr_hFunction(X,theta))));
 	regularizationTerm1 = (lambda/(2 * m)) * sum(theta .^ 2);
 
@@ -110,7 +121,7 @@ function [J,grad] = lr_costFunction (theta, X, y, lambda)
 	grad = grad';
 endfunction
 
-% ==============================================================================
+%===============================================================================
 
 % h Function
 function [result] = lr_hFunction (X,theta)
@@ -118,7 +129,7 @@ function [result] = lr_hFunction (X,theta)
 	result = sigmoidFunction(z)';
 endfunction
 
-% ==============================================================================
+%===============================================================================
 % Function to classify examples
 function prediction = lr_prediction(X, theta, threshold)
 	% Adding a column of ones to X
@@ -130,7 +141,7 @@ function prediction = lr_prediction(X, theta, threshold)
 
 endfunction
 
-% ==============================================================================
+%===============================================================================
 % Function to extract the precision and the recall of a trained model given a
 % threshold
 function [precision,recall,fscore] = lr_precisionRecall(X, y,theta,threshold)
@@ -139,8 +150,9 @@ function [precision,recall,fscore] = lr_precisionRecall(X, y,theta,threshold)
 
 	% Precision calculation
 
-	true_positives = sum(pred_y & y); % logic AND to extract the predicted
-	pred_positives = sum(pred_y); % positives that are true
+	true_positives = sum(pred_y & y); %Logic AND to extract the predicted
+		% positives that are true
+	pred_positives = sum(pred_y);
 
 	if(pred_positives != 0)
 		precision = true_positives / pred_positives;
@@ -148,7 +160,7 @@ function [precision,recall,fscore] = lr_precisionRecall(X, y,theta,threshold)
 		precision = 0;
 	endif
 
-	%Recall calculation
+	% Recall calculation
 	actual_positives = sum(y);
 	test = [pred_y,y,pred_y&y];
 
@@ -157,20 +169,21 @@ function [precision,recall,fscore] = lr_precisionRecall(X, y,theta,threshold)
 	else
 		recall = 0;
 	endif
-	
+
 	% F-score calculation
 	fscore =  (2*precision*recall) / (precision + recall);
 
 endfunction
 
-% ==============================================================================
+%===============================================================================
 % Function to extract the optimum threshold that guarantees the best trade-off
 % between precision and the recall of a trained model
 function [opt_threshold,precision,recall,fscore] = lr_optThreshold(X, y,theta)
+
 	% Try values from 0.01 to 1 in intervals of 0.01
 	for i = 1:100
-		[precisions(i), recalls(i), fscores(i)] = lr_precisionRecall(X, y,theta,
-		 i/100);
+		[precisions(i),recalls(i),fscores(i)] = lr_precisionRecall(X, y,theta,
+			i/100);
 	end
 
 	% Select the best F-score and the threshold associated to it
@@ -181,15 +194,15 @@ function [opt_threshold,precision,recall,fscore] = lr_optThreshold(X, y,theta)
 	fscore = fscores(idx);
 	[max_prec, idx_max_prec] = max(precisions);
 
-	% Show the graphics of the recall-precision results
-	G_lr_RecallPrecision(recalls, precisions, opt_threshold);
+	%Show the graphics of the recall-precision results
+	G_lr_RecallPrecision(recalls,precisions,opt_threshold);
 
 endfunction
 
 % ===============================================================================
 % Function to calculate the error produced by theta over a set of examples
-function error = lr_getError(X, y, theta)
+function error= lr_getError(X, y, theta)
 	m = rows(X);
-	X = [ones(m, 1), X];
-	error =  lr_costFunction(theta, X, y, 0);
+	X = [ones(m,1),X];
+	error =  lr_costFunction(theta,X,y,0);
 endfunction
