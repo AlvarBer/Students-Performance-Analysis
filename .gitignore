@@ -9,3 +9,9 @@ presentation/
 
 # PDF files
 *.pdf
+
+# Octavized Files
+*.oct
+
+# Temporal Files
+*.tmp

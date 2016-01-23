@@ -5,23 +5,18 @@
 #or our training algorithm. Also returns the final trained theta for practical purposes
 
 function   [errTraining, errValidation,Theta1,Theta2] = nn_learningCurves  (X,y,
-  Xval,yval,num_inputs, num_hidden,lambda,initial_params_nn,learningFreq);
+  Xval,yval,num_inputs, num_hidden,lambda,initial_params_nn,learningFreq,max_iterations);
 
-
-#Expand Training X and Validation X with a column of 1s (Independent term)
 m = rows(X);
 
-printf("Calculating learning curves");
+params_nn = initial_params_nn;
+printf("Calculating learning curves...\n");
 #Iterates over the increasing subsets of X and Y
 for i= 1:learningFreq:m
-   printf(".");
-   [Theta1, Theta2] = nn_training(X(1:i,:), y(1:i) ,num_inputs,
-    num_hidden,lambda,initial_params_nn);
+   [Theta1, Theta2] = nn_training(X(1:i,:), y(1:i) ,num_inputs,num_hidden,1,lambda,params_nn,max_iterations);
    params_nn = [Theta1(:); Theta2(:)];
-   errTraining(fix(i/learningFreq) + 1) = nn_costFunction (params_nn,num_inputs, num_hidden,
-    X(1:i,:),y(1:i),0);
-   errValidation(fix(i/learningFreq) + 1) = nn_costFunction (params_nn,num_inputs, num_hidden,
-   Xval,yval,0);
+   errTraining(fix(i/learningFreq) + 1) = nn_costFunction (params_nn,num_inputs, num_hidden,1,X(1:i,:),y(1:i),0);
+   errValidation(fix(i/learningFreq) + 1) = nn_costFunction (params_nn,num_inputs, num_hidden,1, Xval,yval,0);
    fflush(stdout);
 end
 
