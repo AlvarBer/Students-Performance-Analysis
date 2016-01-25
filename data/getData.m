@@ -3,7 +3,7 @@ function [X,y] = getData(filepath)
 
 	data = csvread([filepath '.oct']);
 
-	X = data(:, 1:30);
+	X = data(:, 1:32);
 	y = data(:, 33);
 end
 
@@ -34,7 +34,6 @@ function preProcessData(filepath)
 	filestr = strrep(filestr, 'yes', '1');
 	filestr = strrep(filestr, ';', ',');
 	filestr = strrep(filestr, '"', '');
-	disp(['filestr is' filepath '.oct']);
 	octcsv = fopen([filepath '.oct'], 'w');
 	fprintf(octcsv, '%s', filestr);
 end
