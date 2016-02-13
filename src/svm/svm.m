@@ -9,13 +9,13 @@ function [model] = svm(X,Y)
 	%-------------------------------------------------------------------------------
 	% Parameters
 	normalize = false; %Normalize the data or not
-	percentage_training = 0.6; %Training examples / Total examples
+	percentage_training = 0.7; %Training examples / Total examples
 	adjusting = true; % Activates adjustment process
 	C =  200; % Default C parameter
 	sigma = .1; % Default sigma parameter
 
 	% Adjustment Parameters (Only applies if adjusting = true)
-	percentage_adjustment = 0.2; % Adjustment examples / Total examples
+	percentage_adjustment = 0.1; % Adjustment examples / Total examples
 	values = [0.01,1,10,100]; % Possible combinations of C and sigma
 
 	% Testing Parameters

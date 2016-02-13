@@ -3,7 +3,7 @@ function [X,y] = getData(filepath)
 
 	data = csvread([filepath '.oct']);
 
-	X = data(:, 1:30);
+	X = data(:, 1:32);
 	y = data(:, 33);
 end
 

@@ -1,27 +1,26 @@
 1;
 %===============================================================================
 
-#Relationship between the evolution of the error over the training examples and
-#validation examples
+%Relationship between the evolution of the error over the training examples and
+%validation examples
 
 function [] = G_nn_LearningCurves(X,errTraining, errValidation,learningFreq)
 
 figure;
 
-
-#Number of training examples
+%Number of training examples
 m = rows(X);
 mVector = [1:columns(errTraining)];
 
-iterationsStr = sprintf("Iterations (x%i)", learningFreq);
-plot(mVector,errTraining,"color",'b',"Linewidth", 2);
+iterationsStr = sprintf('Iterations (x%i)', learningFreq);
+plot(mVector,errTraining,'color','b','Linewidth', 2);
 xlabel(iterationsStr);
-ylabel("Error");
+ylabel('Error');
 hold on;
-plot(mVector,errValidation,"color",'g',"Linewidth", 2);
-legend("Error training","Error validation");
+plot(mVector,errValidation,'color','g','Linewidth', 2);
+legend('Error training','Error validation');
 hold off;
-title("Learning curves in neural networks")
+title('Learning curves in neural networks')
 
 endfunction
 
@@ -35,14 +34,14 @@ function [] = G_nn_adjustLambda(errTraining, errAdjustment,lambdaValues)
 
 figure;
 
-plot(lambdaValues,errTraining,"color",'b',"Linewidth", 2);
-xlabel("Values of lambda");
-ylabel("Error");
+plot(lambdaValues,errTraining,'color','b','Linewidth', 2);
+xlabel('Values of lambda');
+ylabel('Error');
 hold on;
-plot(lambdaValues,errAdjustment,"color",'g',"Linewidth", 2);
-legend("Error training","Error adjustment");
+plot(lambdaValues,errAdjustment,'color','g','Linewidth', 2);
+legend('Error training','Error adjustment');
 hold off;
-title("Adjusting lambda in neural networks")
+title('Adjusting lambda in neural networks')
 
 endfunction
 
@@ -52,15 +51,15 @@ endfunction
 function [] = G_nn_RecallPrecision(recalls,precisions,opt_threshold)
 
 figure;
-plot([0.01:0.01:1],recalls,"color", 'b',"linewidth",2);
-xlabel("Threshold");
-ylabel("Recall/Precision");
+plot([0.01:0.01:1],recalls,'color', 'b','linewidth',2);
+xlabel('Threshold');
+ylabel('Recall/Precision');
 hold on;
-plot([0.01:0.01:1],precisions,"color",'g',"linewidth",2);
-plot ([opt_threshold; opt_threshold], [0; 1],"color", 'm',"linestyle","--","linewidth",2);
-legend("Recall","Precision", "Optimum threshold");
+plot([0.01:0.01:1],precisions,'color','g','linewidth',2);
+plot ([opt_threshold; opt_threshold], [0; 1],'color', 'm','linestyle','--','linewidth',2);
+legend('Recall','Precision', 'Optimum threshold');
 hold off;
-title("Recall/Precision with neural networks")
+title('Recall/Precision with neural networks')
 
 endfunction
 %===============================================================================
@@ -73,14 +72,14 @@ function [] = G_nn_adjustNodes(errTraining, errAdjustment,hiddenNodes)
 
 figure;
 
-plot(hiddenNodes,errTraining,"color",'b',"Linewidth", 2);
-xlabel("Number of hidden nodes");
-ylabel("Error");
+plot(hiddenNodes,errTraining,'color','b','Linewidth', 2);
+xlabel('Number of hidden nodes');
+ylabel('Error');
 hold on;
-plot(hiddenNodes,errAdjustment,"color",'g',"Linewidth", 2);
-legend("Error training","Error adjustment");
+plot(hiddenNodes,errAdjustment,'color','g','Linewidth', 2);
+legend('Error training','Error adjustment');
 hold off;
-title("Adjusting hidden nodes in neural networks")
+title('Adjusting hidden nodes in neural networks')
 
 endfunction
 
@@ -94,14 +93,14 @@ negPrediction = prediction(2,:);
 
 figure;
 axis([0,columns(prediction),0,1]);
-plot([1:columns(prediction)],posPrediction,"color", 'g',"linewidth",2);
-xlabel("n training example");
-ylabel("Probability");
+plot([1:columns(prediction)],posPrediction,'color', 'g','linewidth',2);
+xlabel('n training example');
+ylabel('Probability');
 hold on;
-plot([1:columns(prediction)],negPrediction,"color", 'r',"linewidth",2);
-legend("Positive prediction (1)","Negative prediction (0)");
+plot([1:columns(prediction)],negPrediction,'color', 'r','linewidth',2);
+legend('Positive prediction (1)','Negative prediction (0)');
 hold off;
-title("Recall/Precision with neural networks")
+title('Recall/Precision with neural networks')
 
 endfunction
 
@@ -113,15 +112,15 @@ function [] = G_nn_Accuracy(hits,opt_threshold,m)
 
 figure;
 percentages = (hits./m).*100;
-plot([0.01:0.01:1],percentages,"color", 'b',"linewidth",2);
-xlabel("Threshold");
-ylabel("Percentage of hits(%)");
+plot([0.01:0.01:1],percentages,'color', 'b','linewidth',2);
+xlabel('Threshold');
+ylabel('Percentage of hits(%)');
 hold on;
-plot ([opt_threshold; opt_threshold], [0; 100],"color", 'm',"linestyle","--",
-"linewidth",1);
-legend("Percentage of hits","Optimum threshold");
+plot ([opt_threshold; opt_threshold], [0; 100],'color', 'm','linestyle','--',
+'linewidth',1);
+legend('Percentage of hits','Optimum threshold');
 hold off;
-title("Accuracy with neural network");
+title('Accuracy with neural network');
 
 endfunction
 

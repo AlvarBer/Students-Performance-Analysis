@@ -17,7 +17,7 @@ function [theta] = logReg(X,Y,lCurves)
 	threshold = 0.70; % Minimum degree of certainty required
 
 	% ADJUSTMENT PARAMETERS (ONLY APPLIES IF adjusting = true)
-	percentage_adjustment= 0.05; %Adjustment examples / Total examples
+	percentage_adjustment= 0.1; %Adjustment examples / Total examples
 	lambdaValues = [0,0.1,0.2,0.5,1,2,5,10,15,20,25]; % Possible values for lambda
 	%-----------------------------------------------------------------------------
 
@@ -150,8 +150,8 @@ function [theta,cost] = lr_training(X,y,lambda)
 
 	%Optimization
 	options = optimset('GradObj','on','MaxIter',1000);
-	[theta,cost] = fminunc(@(t)(lr_costFunction(t,X,y,lambda)), initial_theta,
-																																			options);
+	[theta,cost] = fminunc(@(t)(lr_costFunction(t,X,y,lambda)), initial_theta, 
+	                       options);
 
 endfunction
 
@@ -165,7 +165,7 @@ function [J,grad] = lr_costFunction (theta,X,y,lambda)
 	m = length(y);
 	n = length(X(1,:));
 	J = ((1 / m) * sum(-y .* log(lr_hFunction(X,theta)) - (1 - y) .*
- 	log (1 - lr_hFunction(X,theta))));
+	log (1 - lr_hFunction(X,theta))));
 	regularizationTerm1 = (lambda/(2 * m)) * sum(theta .^ 2);
 
 	J = J + regularizationTerm1;

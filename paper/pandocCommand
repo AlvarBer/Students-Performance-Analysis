@@ -1,0 +1,3 @@
+pandoc -s -N --template=mytemplate.tex --variable mainfont="Ubuntu" --variable sansfont="Roboto Regular" --variable monofont="Ubuntu Mono" --variable fontsize=12pt --latex-engine=xelatex --toc paper.md -o paper.pdf
+
+pandoc -s -N --template=mytemplate.tex --variable mainfont="Ubuntu" --variable sansfont="Roboto Regular" --variable monofont="Ubuntu Mono" --variable fontsize=12pt --variable footer="Student Data Set" --latex-engine=xelatex --toc paper.md -o paper.pdf

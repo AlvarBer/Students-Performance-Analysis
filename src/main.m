@@ -11,14 +11,14 @@ y(find(y < 10)) = 0;
 y(find(y >= 10)) = 1;
 
 % Options
-lCurves = false; % Set this to true to see learning curves
+lCurves = true; % Set this to true to see learning curves
 ignore_function_time_stamp ('all'); % Black Magic Optimization tricks
 
 % Logistic Regression Analysis
-theta = logReg(X, y, lCurves);
+%theta = logReg(X, y, lCurves);
 
 % Neural Network Analysis
-%theta = neuralNetwork(X, y, lCurves);
+theta = neuralNetwork(X, y, lCurves);
 
 % Support Vector Machine Analysis
 %model = svm(X, y);
