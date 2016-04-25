@@ -31,7 +31,7 @@ makes it harder to work with it.
 Because of that and because the number of students from portuguese the subject 
 (649) was much greater than the number of math (395) we only included those 
 results from the portuguese subjects here, although in measures with the math 
-data set results were very close (Around a 3% variance maximum).
+data set results were very close (around ±3% variance).
 
 Because the csv file used characters to represent data we had to convert 
 everything to numbers, that procedure can be seen in `getData`.
@@ -135,11 +135,11 @@ seen on both figures 1 and 5.
 
 In bold the best percentage of each category.
 
-| Method        | With previous Marks | Without Previous Marks |
-| ------------- |:-------------------:|:----------------------:|
-| LR            |        85.28%       |        **69.94%**      |
-| NN            |      **88.72%**     |          69.74%        |
-| SVM           |        83.97%       |          66.41%        |
+| Method        | With previous marks | W/o previous marks |
+|---------------|:-------------------:|:------------------:|
+| LR            |        85.28%       |      **69.94%**    |
+| NN            |      **88.72%**     |        69.74%      |
+| SVM           |        83.97%       |        66.41%      |
 
 
 Graphics
@@ -148,22 +148,24 @@ Graphics
 Following some graphs showing the breakdown of accuracy, recall, learning 
 curves or the adjustment planes of the different methods
 
+![Logistic Regression Accuracy](graphs/logisticRegression/accuracy.png)
 
-![logRegAccuracy](graphs/logisticRegression/accuracy.png)
+Logistic regression Accuracy is more or less stable even when changing the 
+threshold.
 
-![logRegLearning](graphs/logisticRegression/learning.png)
+![Logistic Regression Learning](graphs/logisticRegression/learning.png)
 
-![logRegRecall](graphs/logisticRegression/recall.png)
+![Logistic Regression Recall](graphs/logisticRegression/recall.png)
 
-![logRegAdjustment](graphs/logisticRegression/adjustment.png)
+![Logistic Regression Adjustment](graphs/logisticRegression/adjustment.png)
 
-![nnAccuracy](graphs/neuralNetwork/accuracy.png)
+![Neural Network Accuracy](graphs/neuralNetwork/accuracy.png)
 
-![nnLearning](graphs/neuralNetwork/learning.png)
+![Neural Network Learning](graphs/neuralNetwork/learning.png)
 
-![nnRecall](graphs/neuralNetwork/recall.png)
+![Neural Network Recall](graphs/neuralNetwork/recall.png)
 
-![svmAdjusting](graphs/supportVectorMachine/adjusting.png)
+![Support Vector Machine Adjustment](graphs/supportVectorMachine/adjusting.png)
 
 
 Possible Improvements
@@ -181,24 +183,32 @@ produce some errors with certain example sizes.
 Parallelization
 ---------------
 While the Neural Network in the code has parallel capacities because `fmincg` 
-seems smart enough to take advantage of the multiple cores the SVM and the LR 
-did not had any parallel capacity, this meant that on a 4-core machine we were 
-wasting a lot of cycles.
+(the gradient descent algorithm we use) seems smart enough to take advantage of 
+multiple cores the SVM and the LR did not had any parallel capacity, this meant 
+that on our 4-core machine we were wasting a lot of cycles.
 
-Not only that but even with this small set of data running the three strategies 
+To illustrate this even with this small set of data running the three strategies 
 could take upwards of half an hour, this is including the adjusting option on 
-all three, but even then, seems quite poor performance with no scalability.
+all three, even then, seems like very poor performance with no scalability.
 
-Again, this could be trivial with `Matlab` `parfor` but in `Octave` this is 
-syntactic sugar for just a `for` loop, the only analogue option is the `parallel` 
-package in the Octave forge, unfortunately there wasn't just enough time.
+This could be trivialy parallelized with `Matlab` `parfor` syntax but in `Octave` 
+this is syntactic sugar for just a `for` loop, the only analogue option is the 
+`parallel` package in the Octave forge, unfortunately there wasn't just enough 
+time.
 
 Better Stratification
 ---------------------
 The stratification used this time was a bit *manual* in the sense that in order 
-to mix the slices it had to be be changed on the source files, it would have 
-been great to have automatic random stratification, but unfortunately again, 
-not enough time.
+to mix the slices a variable had to be be changed on the source code, it would 
+have been great to have automatic random stratification, but unfortunately, 
+again, not enough time.
+
+Decision Trees
+--------------
+On the original paper the authors get a much better result with decision 
+trees and naive Bayes tha with plain machine learning algorithms, but because 
+we set out to not use any library but what was coded by us we didn't had any 
+implementation of decision trees at the time
 
 Conclusions
 ===========
