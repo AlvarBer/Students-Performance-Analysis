@@ -1,1 +1,1 @@
-pandoc lab9.md --template=academic.tex --variable classoption=twocolumn -o lab9.pdf
+pandoc paper.md --template=academic.tex --variable classoption=twocolumn -o paper.pdf
